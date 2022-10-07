@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../public/style.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Sharp" rel="stylesheet" />
+    <title><%= q.title %> - Yarnovin Forum</title>
+  </head>
+  <body>
+    <div class="container">
+      <!-- navbar -->
+      <nav class="topNavbar">
+        <div class="logo">
+          <p>YARNOVIN</p>
+        </div>
+        <div class="searchBox">
+          <span class="material-symbols-sharp" id="sclick">search</span>
+          <input type="text" id="search" placeholder="جستجو..." />
+        </div>
+        <button class="telegramBtn">
+          <span class="material-symbols-sharp">arrow_right_alt</span>
+          <span onclick="window.open('https://telegram.me/devyargp')">گروه تلگرامی</span>
+        </button>
+      </nav>
+      <!-- end navbar -->
+      <main class="contents">
+        <!-- User question box -->
+        <div class="card questionBox">
+          <div class="topInformation">
+            <div class="right">
+              <img src="../public/img/userProfileImage.png" class="profile largProfile" />
+              <div class="texts">
+                <h2><%= q.from.name %></h2>
+                <p class="textMuted time"><%= q.timestamp %></p>
+              </div>
+            </div>
+            <div class="left">
+              <a href="#" class="telegramId telegramIdText"
+                >@<%= (q.from.username || q.from.userid) %></a
+              >
+              <a href="#answers" class="box">
+                <span class="material-symbols-sharp">reply</span>
+                <%= answers.length %> پاسخ
+              </a>
+            </div>
+          </div>
+          <h1><%= q.title %></h1>
+          <div class="questionTexts">
+            <p><%= q.description %></p>
+          </div>
+          <div class="questionTags">
+            <% for(let t of q.topic){%>
+                <div class="tagBox"><%= t %></div>
+            <% } %> 
+          </div>
+        </div>
+        <!--END User question box -->
+        <section id="answers" class="answers">
+            <% for(let a of answers){%>
+                <div class="card answerCard">
+                    <div class="topInformation">
+                      <div class="right">
+                        <img src="../public/img/userProfileImage.png" class="profile medProfile" />
+                        <div class="texts">
+                          <h3><%= a.from.name %></h3>
+                          <p class="textMuted time"><%= a.timestamp %></p>
+                        </div>
+                      </div>
+                      <div class="left">
+                        <a href="#" class="telegramId telegramIdText">@<%= (a.from.username || a.from.userid) %></a>
+                      </div>
+                    </div>
+                    <p class="answerText"><%= a.description %></p>
+                  </div>
+            <% } %> 
+        </section>
+        <aside class="sidebar">
+          <a href="https://telegram.me/devyargp" class="telegramGroupLink">
+            ثبت سوال در گروه تلگرام
+            <span class="material-symbols-sharp">send</span>
+          </a>
+          <div class="relatedQuestions">
+            <h2>دیگر سوالات</h2>
+            <% for( let o of other) { %>
+                <a href="https://forum.yarnovin.ir/t/<%= o._id %>"><%= o.title %></a>
+            <% } %>
+          </div>
+        </aside>
+      </main>
+      <footer>
+        <div class="about">
+          <h2>درباره ما</h2>
+          <p>
+           تیم یارنوین به عنوان یکی از اعضای جامعه برنامه نویسی خود را موظف می‌دانست که قامی را برای پیشرفت این جامعه بردارد، از این رو تصمیم به ایجاد این مجموعه گرفتیم          </p>
+        </div>
+        <div class="other">
+          <h2>سایر سرویس ها</h2>
+          <ul>
+            <li><a href="https://telegram.me/codeyarrobot">کدیار</a></li>
+            <li><a href="https://yarnovin.ir/services.html">سفارش پروژه</a></li>
+            <li><a href="https://yarnovin.ir/pricing.html">آژانس تبلیغاتی</a></li>
+            <li><a href="https://github.com/yarnovin">مشاهده همه</a></li>
+          </ul>
+        </div>
+        <div class="contact">
+          <h2>ارتباطات</h2>
+          <div class="info">
+            <div class="right">
+              <span class="material-symbols-sharp">send</span>
+              <h3>آیدی تلگرام :</h3>
+            </div>
+            <div class="left">
+              <a href="https://telegram.me/devyargp" dir="ltr">@DevYarGp</a>
+            </div>
+          </div>
+          <div class="info">
+            <div class="right">
+              <span class="material-symbols-sharp">Language</span>
+              <h3>وبسایت :</h3>
+            </div>
+            <div class="left">
+              <a href="https://yarnovin.ir">YarNovin.ir</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <script src="../public/script/time.js"></script>
+  </body>
+</html>

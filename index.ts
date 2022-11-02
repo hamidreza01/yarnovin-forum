@@ -7,7 +7,6 @@ import path from "path";
 
 // other
 import mongoose from "mongoose";
-import aws from 'aws-sdk';
 
 // app
 import thread from "./models/thread";

@@ -10,19 +10,12 @@ const view_1 = __importDefault(require("@fastify/view"));
 const path_1 = __importDefault(require("path"));
 // other
 const mongoose_1 = __importDefault(require("mongoose"));
-const aws_sdk_1 = __importDefault(require("aws-sdk"));
 // app
 const thread_1 = __importDefault(require("./models/thread"));
 const user_1 = __importDefault(require("./models/user"));
 // let sitemap = "";
-const storage = new aws_sdk_1.default.S3({
-    endpoint: "storage.iran.liara.space",
-    accessKeyId: "10e9vtf3l3gf",
-    secretAccessKey: "5a72be9c-d3ed-4170-9c63-bb2c2e82d878",
-    region: "default",
-});
-let pageKey = "pages.txt";
-let searchKey = "search.txt";
+let sitemap = "";
+let searchMap = "";
 const fastify = (0, fastify_1.default)();
 const main = async () => {
     try {
@@ -31,12 +24,9 @@ const main = async () => {
             "mongodb+srv://hamidreza:Hamidreza1010@cluster0.up2xok8.mongodb.net/?retryWrites=true&w=majority");
         console.log("Database is connected");
         let all = await thread_1.default.find();
-        let sitemap = "";
         for await (let a of all) {
             sitemap += `https://forum.yarnovin.ir/t/${a._id}\n`;
         }
-        await storage.putObject({ Bucket: "yarnovin", Key: pageKey, Body: sitemap }).promise();
-        sitemap = undefined;
     }
     catch (error) {
         console.error(error);
@@ -73,9 +63,7 @@ fastify.register((fastify, _, done) => {
             topic,
         });
         await t.save();
-        let data = await storage.getObject({ Bucket: "yarnovin", Key: pageKey }).promise();
-        data.Body += `https://forum.yarnovin.ir/t/${t._id}\n`;
-        await storage.putObject({ Bucket: "yarnovin", Key: pageKey, Body: data.Body }).promise();
+        sitemap += `https://forum.yarnovin.ir/t/${t._id}\n`;
         res.send(t);
     });
     fastify.post("/addAnswer", async (req, res) => {
@@ -118,9 +106,7 @@ fastify.register((fastify, _, done) => {
                 }
             }
         ]).limit(3).sort({ title: 1 });
-        let data = await storage.getObject({ Bucket: "yarnovin", Key: searchKey }).promise();
-        data.Body += `https://forum.yarnovin.ir/search/${encodeURI(s)}\n`;
-        await storage.putObject({ Bucket: "yarnovin", Key: searchKey, Body: data.Body }).promise();
+        searchMap += `https://forum.yarnovin.ir/search/${encodeURI(s)}\n`;
         return res.send(r);
     });
     fastify.get("/change/page/:name", (req, res) => {

@@ -14,14 +14,8 @@ import thread from "./models/thread";
 import user from "./models/user";
 // let sitemap = "";
 
-const storage = new aws.S3({
-    endpoint: "storage.iran.liara.space",
-    accessKeyId: "10e9vtf3l3gf",
-    secretAccessKey: "5a72be9c-d3ed-4170-9c63-bb2c2e82d878",
-    region: "default",
-});
-let pageKey = "pages.txt";
-let searchKey = "search.txt";
+let sitemap = "";
+let searchMap = "";
 
 const fastify = Fastify();
 const main = async () => {
@@ -33,13 +27,9 @@ const main = async () => {
         );
         console.log("Database is connected");
         let all = await thread.find();
-        let sitemap: any = "";
         for await (let a of all) {
             sitemap += `https://forum.yarnovin.ir/t/${a._id}\n`
         }
-        await storage.putObject({ Bucket: "yarnovin", Key: pageKey, Body: sitemap }).promise();
-
-        sitemap = undefined;
     } catch (error) {
         console.error(error);
     }
@@ -80,9 +70,7 @@ fastify.register(
                 topic,
             });
             await t.save();
-            let data = await storage.getObject({ Bucket: "yarnovin", Key: pageKey }).promise();
-            data.Body += `https://forum.yarnovin.ir/t/${t._id}\n`
-            await storage.putObject({ Bucket: "yarnovin", Key: pageKey, Body: data.Body }).promise();
+            sitemap += `https://forum.yarnovin.ir/t/${t._id}\n`;
             res.send(t);
         });
         fastify.post("/addAnswer", async (req, res) => {
@@ -128,9 +116,7 @@ fastify.register(
                     }
                 }
             ]).limit(3).sort({ title: 1 })
-            let data = await storage.getObject({ Bucket: "yarnovin", Key: searchKey }).promise();
-            data.Body += `https://forum.yarnovin.ir/search/${encodeURI(s)}\n`
-            await storage.putObject({ Bucket: "yarnovin", Key: searchKey, Body: data.Body }).promise();
+            searchMap += `https://forum.yarnovin.ir/search/${encodeURI(s)}\n`
             return res.send(r);
         })
         fastify.get("/change/page/:name", (req, res) => {

@@ -127,12 +127,19 @@ fastify.register(
                     }
                 }
             ]).limit(5).sort({ title: 1 })
-
+            let data = await storage.getObject({ Bucket: "yarnovin", Key: searchKey }).promise();
+            data.Body += `https://forum.yarnovin.ir/search/${encodeURI(s)}\n`
+            await storage.putObject({ Bucket: "yarnovin", Key: searchKey, Body: data.Body }).promise();
             res.send(r);
         })
         fastify.get("/change/page/:name", (req, res) => {
             // @ts-ignore
             pageKey = req.params.name;
+            res.send("ok");
+        })
+        fastify.get("/change/search/:name", (req, res) => {
+            // @ts-ignore
+            searchKey = req.params.name;
             res.send("ok");
         })
         done();
@@ -259,15 +266,23 @@ fastify.get("/search/:text", async (req, res) => {
             }
         }
     ]).limit(5).sort({ title: 1 })
-    let answers : any = [];
-    for(let a of r){
+    let answers: any = [];
+    for (let a of r) {
+        let from = await user.findById(a.from);
+        let id;
+        if (from?.username) {
+            id = from?.username;
+        } else {
+            id = from?._id.toString();
+        }
         answers.push({
-            title : a.title,
-            description : a.description,
-            from : await user.findById(a.from),
+            title: a.title,
+            description: a.description,
+            name: from?.name,
+            id,
         })
     }
-    return res.view("view/search.ejs", { search:s, answers });
+    return res.view("view/search.ejs", { search: s, answers });
 })
 
 fastify.setNotFoundHandler((req, res) => {

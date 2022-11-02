@@ -7,11 +7,22 @@ import path from "path";
 
 // other
 import mongoose from "mongoose";
+import aws from 'aws-sdk';
 
 // app
 import thread from "./models/thread";
 import user from "./models/user";
-let sitemap = "";
+// let sitemap = "";
+
+const storage = new aws.S3({
+    endpoint : "storage.iran.liara.space",
+    accessKeyId : "10e9vtf3l3gf",
+    secretAccessKey : "5a72be9c-d3ed-4170-9c63-bb2c2e82d878",
+    region : "default",
+});
+let pageKey = "pages.txt";
+let searchKey = "search.txt";
+
 const fastify = Fastify();
 const main = async () => {
     try {
@@ -21,9 +32,13 @@ const main = async () => {
         );
         console.log("Database is connected");
         let all = await thread.find();
+        let sitemap : any = "";
         for await (let a of all){
-            sitemap += "https://forum.yarnovin.ir/t/"+ a._id + "\n"
+            sitemap += `https://forum.yarnovin.ir/t/${a._id}\n`
         }
+        await storage.putObject({Bucket : "yarnovin", Key : pageKey, Body : sitemap}).promise();
+        
+        sitemap = undefined;
     } catch (error) {
         console.error(error);
     }
@@ -64,7 +79,9 @@ fastify.register(
                 topic,
             });
             await t.save();
-            sitemap += "https://forum.yarnovin.ir/t/" + t._id + "\n";
+            let data = await storage.getObject({Bucket : "yarnovin", Key : pageKey}).promise();
+            data.Body += `https://forum.yarnovin.ir/t/${t._id}\n`
+            await storage.putObject({Bucket : "yarnovin", Key : pageKey, Body : data.Body}).promise();
             res.send(t);
         });
         fastify.post("/addAnswer", async (req, res) => {
@@ -109,15 +126,21 @@ fastify.register(
                         }
                     }
                 }
-            ]).limit(3).sort({title: 1})
+            ]).limit(5).sort({title: 1})
 
             res.send(r);
+        })
+        fastify.get("/change/page/:name",(req,res)=>{
+            // @ts-ignore
+            pageKey = req.params.name;
+            res.send("ok");
         })
         done();
     }, {prefix: process.env.AURL || "/UC87TRW"}
 );
 
 fastify.register(require('fastify-favicon'), {path: './public/img/', name: 'favicon.ico', maxAge: 3600});
+
 
 fastify.get("/t/:id", async (req, res) => {
     const {id} = req.params as any;
@@ -178,9 +201,12 @@ fastify.get("/user/:id",async (req,res)=>{
     return res.view("/view/user.ejs", {user : sendUser});
 })
 
-fastify.get("/sitemap/1",(req,res)=>{
-    res.send(sitemap);
+fastify.get("/getStringFile/:file",async (req,res)=>{
+    // @ts-ignore
+    let data = await storage.getObject({Bucket : "yarnovin", Key : req.params.file}).promise();
+    return res.header("Content-Type","text/plain").send(data.Body)
 })
+
 
 fastify.get("/", async (req, res) => {
     let q = await thread

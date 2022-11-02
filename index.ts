@@ -119,16 +119,6 @@ fastify.register(
             searchMap += `https://forum.yarnovin.ir/search/${encodeURI(s)}\n`
             return res.send(r);
         })
-        fastify.get("/change/page/:name", (req, res) => {
-            // @ts-ignore
-            pageKey = req.params.name;
-            res.send("ok");
-        })
-        fastify.get("/change/search/:name", (req, res) => {
-            // @ts-ignore
-            searchKey = req.params.name;
-            res.send("ok");
-        })
         done();
     }, { prefix: process.env.AURL || "/UC87TRW" }
 );
@@ -169,6 +159,13 @@ fastify.get("/t/:id", async (req, res) => {
         .limit(10);
     return res.view("/view/answer.ejs", { q, answers, other });
 });
+
+fastify.get("/sitemap/1", (req, res) => {
+    res.send(sitemap);
+})
+fastify.get("/sitemap/2", (req, res) => {
+    res.send(searchMap);
+})
 
 fastify.get("/user/:id", async (req, res) => {
     // @ts-ignore
@@ -256,7 +253,7 @@ fastify.get("/search/:text", async (req, res) => {
             id = from?._id.toString();
         }
         answers.push({
-            _id : a._id.toString(),
+            _id: a._id.toString(),
             title: a.title,
             description: a.description,
             name: from?.name,

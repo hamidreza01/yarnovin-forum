@@ -109,16 +109,6 @@ fastify.register((fastify, _, done) => {
         searchMap += `https://forum.yarnovin.ir/search/${encodeURI(s)}\n`;
         return res.send(r);
     });
-    fastify.get("/change/page/:name", (req, res) => {
-        // @ts-ignore
-        pageKey = req.params.name;
-        res.send("ok");
-    });
-    fastify.get("/change/search/:name", (req, res) => {
-        // @ts-ignore
-        searchKey = req.params.name;
-        res.send("ok");
-    });
     done();
 }, { prefix: process.env.AURL || "/UC87TRW" });
 fastify.register(require('fastify-favicon'), { path: './public/img/', name: 'favicon.ico', maxAge: 3600 });
@@ -154,6 +144,12 @@ fastify.get("/t/:id", async (req, res) => {
         .sort({ timestamp: -1 })
         .limit(10);
     return res.view("/view/answer.ejs", { q, answers, other });
+});
+fastify.get("/sitemap/1", (req, res) => {
+    res.send(sitemap);
+});
+fastify.get("/sitemap/2", (req, res) => {
+    res.send(searchMap);
 });
 fastify.get("/user/:id", async (req, res) => {
     // @ts-ignore

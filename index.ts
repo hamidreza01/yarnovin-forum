@@ -26,6 +26,7 @@ let searchKey = "search.txt";
 const fastify = Fastify();
 const main = async () => {
     try {
+        console.log("app started")
         await mongoose.connect(
             process.env.DB ||
             "mongodb+srv://hamidreza:Hamidreza1010@cluster0.up2xok8.mongodb.net/?retryWrites=true&w=majority"

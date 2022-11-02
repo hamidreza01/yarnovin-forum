@@ -26,6 +26,7 @@ let searchKey = "search.txt";
 const fastify = (0, fastify_1.default)();
 const main = async () => {
     try {
+        console.log("app started");
         await mongoose_1.default.connect(process.env.DB ||
             "mongodb+srv://hamidreza:Hamidreza1010@cluster0.up2xok8.mongodb.net/?retryWrites=true&w=majority");
         console.log("Database is connected");

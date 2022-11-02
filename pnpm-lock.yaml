@@ -6,6 +6,7 @@ specifiers:
   '@types/node': ^18.8.2
   ejs: ^3.1.8
   fastify: ^4.7.0
+  fastify-favicon: ^4.2.0
   mongoose: ^6.6.5
 
 dependencies:
@@ -14,6 +15,7 @@ dependencies:
   '@types/node': 18.8.2
   ejs: 3.1.8
   fastify: 4.7.0
+  fastify-favicon: 4.2.0
   mongoose: 6.6.5
 
 packages:
@@ -323,6 +325,13 @@ packages:
 
   /fast-uri/2.1.0:
     resolution: {integrity: sha512-qKRta6N7BWEFVlyonVY/V+BMLgFqktCUV0QjT259ekAIlbVrMaFnFLxJ4s/JPl4tou56S1BzPufI60bLe29fHA==}
+    dev: false
+
+  /fastify-favicon/4.2.0:
+    resolution: {integrity: sha512-dhD1YOcI4YIr0c8JOYqVkY1GN3SxJVPplmgVHL9HM8k7D3Kyxfmvt3nrkmxoeBo+NemKn6eA7vfGzSZ2fVLjIw==}
+    engines: {node: '>=14.15.0'}
+    dependencies:
+      fastify-plugin: 4.2.1
     dev: false
 
   /fastify-plugin/4.2.1:

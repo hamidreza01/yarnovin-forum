@@ -3,19 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+    <title><%= q.title %> - انجمن یارنوین</title>
     <meta name="googlebot" content="all" />
-    <meta name="description" content="لیست اخرین سوالات در انجمن پرسش و پاسخ مجموعه یارنوین، سوالات خود را در رابطه با برنامه نویسی بپرسید" />
-    <link rel="stylesheet" href="../public/style.css" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Sharp" rel="stylesheet" />
-    <title>اخرین سوالات - انجمن یارنون</title>
-    <link rel="stylesheet" href="public/assets/bootstrap/css/bootstrap.min.css" />
+    <meta name="description" content="<%= q.description.substring(0,155) %>" />
+    <link rel="stylesheet" href="../public/assets/bootstrap/css/bootstrap.min.css" />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Vazirmatn&amp;display=swap"
     />
-    <link rel="stylesheet" href="public/assets/css/styles.min.css" />
+    <link rel="stylesheet" href="../public/assets/css/styles.min.css" />
   </head>
-  <body style="font-family: Vazirmatn, sans-serif;">
+  <body style="font-family: Vazirmatn, sans-serif">
     <nav class="navbar navbar-light navbar-expand-md shadow-sm py-3" style="margin-bottom: 30px">
       <div class="container">
         <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-4">
@@ -68,42 +66,81 @@
     </nav>
     <div class="container">
       <div class="row">
-        <div class="col-md-12">
-          <div class="row flex-column">
-            <div class="col">
-              <h3 style="text-align: right">آخرین سوالات</h3>
-              <hr />
-              <div class="row flex-column">
-                <% for(q of question) { %>
-                  <div class="col" style="margin-bottom: 20px">
-                    <div class="border rounded" style="padding: 20px; background: #f1f1f1">
-                      <div class="d-flex d-md-flex justify-content-end justify-content-md-end">
-                        <a class="text-end normal-link" href="/t/<%= q.id %>" style="text-align: right; direction: rtl;"><%= q.title %></a
-                        >
-                      </div>
-                      <p class="text-end" style="direction: rtl"><%= q.text %></p>
-                      <div class="d-flex justify-content-end justify-content-md-end card-name" onclick="window.open('/user/<%= q.userid %>')" style="cursor: pointer;">
-                        <span
-                          class="d-flex d-md-flex justify-content-center align-items-center align-items-md-center"
-                          ><%= q.name %></span
-                        >
-                        <div
-                          class="border rounded-circle d-flex d-md-flex justify-content-center align-items-center justify-content-md-center align-items-md-center"
-                          style="height: 35px; width: 35px; background: #ff4646; margin-left: 3px;"
-                        >
-                          <span
-                            class="d-md-flex justify-content-md-center align-items-md-center"
-                            style="color: rgb(255, 255, 255)"
-                            ></span
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                <% } %>
-                <div class="col"><hr /></div>
+        <div class="col-md-12" style="margin-bottom: 16px">
+          <div class="border rounded" style="height: auto; background: #f1f1f1; padding: 20px">
+            <h2 class="fw-bold" style="text-align: right; direction: rtl;"><%= q.title %></h2>
+            <hr style="margin-top: 8px" />
+            <p style="text-align: right; direction: rtl;" class="enter"><%= q.description %></p>
+            <hr style="margin-bottom: 10px" />
+            <div class="d-flex justify-content-end justify-content-md-end card-name" onclick="window.open('/user/<%= q.id %>')" style="cursor: pointer;">
+              <span
+                class="d-flex d-md-flex justify-content-center align-items-center align-items-md-center"
+                ><%= q.from.name %></span
+              >
+              <div
+                  class="border rounded-circle d-flex d-md-flex justify-content-center align-items-center justify-content-md-center align-items-md-center"
+                  style="height: 35px; width: 35px; background: #ff4646; margin-left: 3px;"
+                >
+                <span
+                  class="d-md-flex justify-content-md-center align-items-md-center"
+                  style="color: rgb(255, 255, 255); font-size: 14px"
+                  ></span
+                >
               </div>
             </div>
+            <div class="time length" style="text-align: right"><span>ارسال شده در %<%= q.timestamp %>% قبل با %LENGTH% پاسخ</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-9">
+          <% for(let a of answers) {%>
+            <div
+              class="border rounded"
+              style="height: auto; background: #f1f1f1; padding: 20px; margin-bottom: 16px"
+            >
+              <p style="text-align: right; direction: rtl;" class="enter"><%= a.description %></p>
+              <hr style="margin-bottom: 10px" />
+              <div class="d-flex justify-content-end justify-content-md-end card-name" onclick="window.open('/user/<%= a.id %>')" style="cursor: pointer;">
+           
+                <span
+                  class="d-flex d-md-flex justify-content-center align-items-center align-items-md-center "><%= a.from.name %></span
+                >
+                <div
+                  class="border rounded-circle d-flex d-md-flex justify-content-center align-items-center justify-content-md-center align-items-md-center"
+                  style="height: 35px; width: 35px; background: #ff4646; margin-left: 3px;"
+                >
+                  <span
+                    class="d-md-flex justify-content-md-center align-items-md-center"
+                    style="color: rgb(255, 255, 255); font-size: 14px"
+                    ></span
+                  >
+                </div>
+              </div>
+              <div style="text-align: right" class="time"><span>ارسال شده در %<%=a.timestamp%>% قبل</span></div>
+            </div>
+          <%  } %>  
+        </div>
+        <div class="col-md-3">
+          <div
+            class="border rounded"
+            style="height: auto; color: rgb(235, 235, 235); background: #f1f1f1; padding: 10px"
+          >
+            <h5 style="text-align: right; color: rgb(0, 0, 0); font-weight: bold; padding: 7px">
+              دیگر سوالات
+            </h5>
+            <% for(let o of other){ %>
+              <div
+                class="border rounded d-flex d-md-flex justify-content-center align-items-center justify-content-md-center align-items-md-center"
+                style="height: auto; background: #dcdcdc; margin-bottom: 10px; text-align: center"
+              >
+                <a class="normal-link" href="/t/<%= o._id %>" style="text-align: center; padding: 10px; direction: rtl;"
+                  ><%= o.title %> </a
+                >
+              </div>
+            <% } %>  
           </div>
         </div>
       </div>
@@ -311,7 +348,8 @@
         </div>
       </div>
     </footer>
-    <script src="public/assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="public/assets/js/script.min.js"></script>
+    <script src="../public/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../public/assets/js/time.js"></script>
+    <script src="../public/assets/js/script.min.js"></script>
   </body>
 </html>

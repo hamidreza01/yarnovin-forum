@@ -227,9 +227,6 @@ fastify.get("/", async (req, res) => {
 fastify.get("/test", (req, res) => {
     res.view("view/index.ejs");
 });
-fastify.get("/search", (req, res) => {
-    res.redirect("/");
-});
 fastify.get("/search/:text", async (req, res) => {
     // @ts-ignore
     let s = req.params.text;

@@ -120,6 +120,7 @@ fastify.register((fastify, _, done) => {
         let data = await storage.getObject({ Bucket: "yarnovin", Key: searchKey }).promise();
         data.Body += `https://forum.yarnovin.ir/search/${encodeURI(s)}\n`;
         await storage.putObject({ Bucket: "yarnovin", Key: searchKey, Body: data.Body }).promise();
+        console.log("ok");
         return res.send(r);
     });
     fastify.get("/change/page/:name", (req, res) => {

@@ -218,6 +218,36 @@ fastify.get("/", async (req, res) => {
 fastify.get("/test", (req, res) => {
     res.view("view/index.ejs");
 });
+fastify.get("/search", (req, res) => {
+    res.redirect("/");
+});
+fastify.get("/search/:text", async (req, res) => {
+    // @ts-ignore
+    let s = req.params.text;
+    let r = await thread_1.default.aggregate([
+        {
+            $search: {
+                "compound": {
+                    "should": [{
+                            "text": {
+                                "query": s,
+                                "path": ["description", "title"]
+                            },
+                        }],
+                }
+            }
+        }
+    ]).limit(5).sort({ title: 1 });
+    let answers = [];
+    for (let a of r) {
+        answers.push({
+            title: a.title,
+            description: a.description,
+            from: await user_1.default.findById(a.from),
+        });
+    }
+    return res.view("view/search.ejs", { search: s, answers });
+});
 fastify.setNotFoundHandler((req, res) => {
     res.status(400).redirect("https://telegram.me/devyargp");
 });

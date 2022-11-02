@@ -194,7 +194,7 @@ fastify.get("/user/:id", async (req, res) => {
     sendUser.question = await thread_1.default.countDocuments({ from: u._id });
     return res.view("/view/user.ejs", { user: sendUser });
 });
-fastify.get("/get/:file", async (req, res) => {
+fastify.get("/file/:file", async (req, res) => {
     // @ts-ignore
     let data = await storage.getObject({ Bucket: "yarnovin", Key: req.params.file }).promise();
     return res.header("Content-Type", "text/plain").send(data.Body);
@@ -224,9 +224,6 @@ fastify.get("/", async (req, res) => {
     }
     return res.view("/view/index.ejs", { question });
 });
-fastify.get("/test", (req, res) => {
-    res.view("view/index.ejs");
-});
 fastify.get("/search/:text", async (req, res) => {
     // @ts-ignore
     let s = req.params.text;
@@ -255,6 +252,7 @@ fastify.get("/search/:text", async (req, res) => {
             id = from?._id.toString();
         }
         answers.push({
+            _id: a._id,
             title: a.title,
             description: a.description,
             name: from?.name,

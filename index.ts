@@ -270,7 +270,7 @@ fastify.get("/search/:text", async (req, res) => {
             id = from?._id.toString();
         }
         answers.push({
-            _id : a._id,
+            _id : a._id.toString(),
             title: a.title,
             description: a.description,
             name: from?.name,

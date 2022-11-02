@@ -121,7 +121,6 @@ fastify.register((fastify, _, done) => {
         let data = await storage.getObject({ Bucket: "yarnovin", Key: searchKey }).promise();
         data.Body += `https://forum.yarnovin.ir/search/${encodeURI(s)}\n`;
         await storage.putObject({ Bucket: "yarnovin", Key: searchKey, Body: data.Body }).promise();
-        console.log("ok");
         return res.send(r);
     });
     fastify.get("/change/page/:name", (req, res) => {
@@ -167,7 +166,7 @@ fastify.get("/t/:id", async (req, res) => {
         },
     })
         .sort({ timestamp: -1 })
-        .limit(8);
+        .limit(10);
     return res.view("/view/answer.ejs", { q, answers, other });
 });
 fastify.get("/user/:id", async (req, res) => {

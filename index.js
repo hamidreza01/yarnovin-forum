@@ -117,7 +117,7 @@ fastify.register((fastify, _, done) => {
                     }
                 }
             }
-        ]).limit(5).sort({ title: 1 });
+        ]).limit(3).sort({ title: 1 });
         let data = await storage.getObject({ Bucket: "yarnovin", Key: searchKey }).promise();
         data.Body += `https://forum.yarnovin.ir/search/${encodeURI(s)}\n`;
         await storage.putObject({ Bucket: "yarnovin", Key: searchKey, Body: data.Body }).promise();
@@ -194,7 +194,7 @@ fastify.get("/user/:id", async (req, res) => {
     sendUser.question = await thread_1.default.countDocuments({ from: u._id });
     return res.view("/view/user.ejs", { user: sendUser });
 });
-fastify.get("/getStringFile/:file", async (req, res) => {
+fastify.get("/get/:file", async (req, res) => {
     // @ts-ignore
     let data = await storage.getObject({ Bucket: "yarnovin", Key: req.params.file }).promise();
     return res.header("Content-Type", "text/plain").send(data.Body);

@@ -180,7 +180,7 @@ fastify.get("/user/:id", async (req, res) => {
         res.status(404).send("404 error")
     }
     // @ts-ignore
-    let sendUser = { name: u?.name, username: u?.username || u._id } as any;
+    let sendUser = { name: u?.name, username: u?.username || u._id, bio : u?.bio } as any;
     if (u?.username) {
         sendUser.telegram = true;
     }
